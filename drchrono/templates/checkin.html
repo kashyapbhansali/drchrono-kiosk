@@ -3,6 +3,10 @@
 {% block content %}
     <h1>Patient Check-in</h1>
     <br>
+    {% if error_message %}
+        <div class="alert alert-danger">{{ error_message }}</div>
+    {% endif %}
+
     <div class="col-md-6 col-sm-12 col-xs-12">
         <form method="post" action="">
             {% csrf_token %}

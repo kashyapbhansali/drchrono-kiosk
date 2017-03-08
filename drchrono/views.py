@@ -7,8 +7,7 @@ from django.core.mail import send_mail,send_mass_mail
 from .models import PatientModel
 from .forms import birthdayEmailForm, CheckinForm
 from django.conf import settings
-from data_calls import *
-from django.http import HttpResponse, JsonResponse
+from services import *
 from pprint import pprint as pp
 
 
@@ -32,32 +31,45 @@ def setup_kiosk(request):
 
     return render(request, 'setup_kiosk.html', {})
 
+
 def checkin(request):
     checkin_form = CheckinForm(request.POST or None)
+    context = {'form': checkin_form}
     #todo: query appoints data and validate the user
+
+    #check if user data is valid
     if checkin_form.is_valid():
         fname = checkin_form.cleaned_data['fname']
         lname = checkin_form.cleaned_data['lname']
         ssn = checkin_form.cleaned_data['ssn']
-        #Set session variable with current patient details for use in demographics view
-        request.session['patient_checkin'] = {
+
+        checkin_data = {
             'fname' : fname,
             'lname' : lname,
             'ssn' : ssn
         }
-        #todo: check if valid appointment
-        return redirect('/demographics')
+        #if form valid, go ahead and get patient info
+        results = check_get_demographics(request, checkin_data)
+        if not results:
+            context['error_message'] = 'Your details seem to be incorrect.'
+        else:
+            #check if the appointment was scheduled
+            output = check_patient_appointment(request, {'patient_id': results['id'], 'date': datetime.date.today().isoformat()})
+            if output:
+                request.session['patient_demographics'] = results
+                return redirect('/demographics')
+            else:
+                context['error_message'] = 'No such appointment Scheduled.'
 
-    context = {'form': checkin_form}
     return render(request, 'checkin.html', context)
 
-def demographics(request):
-    patients_url = 'https://drchrono.com/api/patients'
-    results = get_demographics(patients_url, request.session['headers'], request.session['patient_checkin'])
-    check_data = request.session['patient_checkin']
 
-    context = {'check_data' : check_data, 'results':results}
+def demographics(request):
+    #todo: display data and make it editabe by the patient
+    #todo: mark patient as arrived
+    context = {'results': request.session['patient_demographics']}
     return render(request, 'demographics.html', context)
+
 
 def home(request):
     if not request.user.is_authenticated():
