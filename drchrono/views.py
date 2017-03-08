@@ -1,0 +1,140 @@
+# Create your views here.
+import datetime
+import requests
+from django.shortcuts import render, redirect
+from django.contrib.auth import logout as drchrono_logout
+from django.core.mail import send_mail,send_mass_mail
+from .models import PatientModel
+from .forms import birthdayEmailForm, CheckinForm
+from django.conf import settings
+from data_calls import *
+from django.http import HttpResponse, JsonResponse
+from pprint import pprint as pp
+
+
+def setup_kiosk(request):
+    #todo: get list of day's appointments and save to model at time of setup
+
+
+    #check if authenticated
+    if not request.user.is_authenticated():
+        return redirect('/')
+    #get user instance
+    user_instance = request.user.social_auth.get(provider='drchrono')
+    #saving data to session
+    request.session['doctor_access_token'] =  user_instance.extra_data['access_token']
+    request.session['headers'] = {
+        'Authorization': 'Bearer %s' % request.session['doctor_access_token'],
+    }
+    offices_url = 'https://drchrono.com/api/offices'
+    results = get_offices(offices_url, request.session['headers'])
+    pp(results)
+
+    return render(request, 'setup_kiosk.html', {})
+
+def checkin(request):
+    checkin_form = CheckinForm(request.POST or None)
+    #todo: query appoints data and validate the user
+    if checkin_form.is_valid():
+        fname = checkin_form.cleaned_data['fname']
+        lname = checkin_form.cleaned_data['lname']
+        ssn = checkin_form.cleaned_data['ssn']
+        #Set session variable with current patient details for use in demographics view
+        request.session['patient_checkin'] = {
+            'fname' : fname,
+            'lname' : lname,
+            'ssn' : ssn
+        }
+        #todo: check if valid appointment
+        return redirect('/demographics')
+
+    context = {'form': checkin_form}
+    return render(request, 'checkin.html', context)
+
+def demographics(request):
+    patients_url = 'https://drchrono.com/api/patients'
+    results = get_demographics(patients_url, request.session['headers'], request.session['patient_checkin'])
+    check_data = request.session['patient_checkin']
+
+    context = {'check_data' : check_data, 'results':results}
+    return render(request, 'demographics.html', context)
+
+def home(request):
+    if not request.user.is_authenticated():
+        return redirect('/')
+
+    template = 'home.html'
+    context = {'username': request.user}
+    user_instance = request.user.social_auth.get()
+    #access_token = user_instance.extra_data['access_token']
+    request.session['access_token'] =  user_instance.extra_data['access_token']
+    access_token = request.session['access_token']
+    headers = {
+        'Authorization': 'Bearer %s' % access_token,
+    }
+
+    # this endpoint returns a few lists of patients at a time
+    # it has next and previous points to indicate if more patients are available
+    patients_url = 'https://drchrono.com/api/patients'
+    patient_list = []
+
+    while True:
+        r = requests.get(patients_url, headers=headers)
+        #print r.raise_for_status()
+        patient_data = r.json()
+        #pprint(patient_data)
+        patient_list.extend(patient_data['results'])
+        if not patient_data['next']:
+            break
+
+    #save data using PatientModel
+
+    for patient in patient_list:
+        #defuult date if birthdate not available
+        dob = '0001-01-01'
+        if patient['date_of_birth']:
+            dob = patient['date_of_birth']
+        p = PatientModel(
+            first_name=patient['first_name'],
+            last_name=patient['last_name'],
+            doctor_id=patient['doctor'],
+            gender=patient['gender'],
+            birthday=dob,
+            patient_id=patient['id'],
+            patient_email=patient['email']
+        )
+        p.save()
+
+    return render(request, template, context)
+
+def user(request):
+    #get all patients who have an email id and birthdate
+    message = settings.EMAIL_BIRTHDAY_DEFAULT_MESSAGE
+    p = PatientModel.objects.exclude(patient_email="")
+    birthdays = PatientModel.objects.filter(birthday__day=datetime.date.today().day,birthday__month=datetime.date.today().month).exclude(birthday__year=1)
+    birthday_email_list = map(lambda x:x['patient_email'],birthdays.values())
+    #pprint(birthday_email_list)
+    #pprint(birthdays)
+    form = birthdayEmailForm(request.POST or None, initial={'message': message})
+    confirmation = None
+
+    if form.is_valid():
+        name = "drchrono team"
+        subject = "Happy Birthday from drchrono!"
+        message = form.cleaned_data['message']
+        from_email = "drchrono@drchrono.com"
+        recipient_list = birthday_email_list
+        #datatuple for sending mass mail
+        email_tuple = ((subject, message, from_email, recipient_list),)
+        count = send_mass_mail(email_tuple, fail_silently=False)
+        confirmation = "Birthday wishes were sent to %s people." % count
+
+    template = 'user.html'
+    context = {'patient_data': p, 'form': form, 'confirmation': confirmation, 'birthdays': birthdays}
+
+
+    return render(request, template, context)
+
+def logout(request):
+    drchrono_logout(request)
+    return redirect('/')

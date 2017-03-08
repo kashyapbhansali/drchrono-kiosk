@@ -1,0 +1,72 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h3>Patients with Email Id &amp; Birthdate Information</h3>
+    <br>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Date of Birth</th>
+            </tr>
+        </thead>
+
+        {% for patient in patient_data %}
+            <tr>
+                <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                <td>
+                    {{ patient.patient_email }}
+
+                </td>
+                <td> {{ patient.birthday }} </td>
+
+            </tr>
+        {% endfor %}
+
+    </table>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Send Birthday Wishes to your patients</h3>
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <input type="submit" value="Send Wishes" class="btn btn-success">
+            </form>
+
+            {% if confirmation %}
+                <h6 class="alert alert-success">{{ confirmation }}</h6>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h3>Birthdays Today</h3>
+            {% if birthdays %}
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+
+                    {% for patient in birthdays %}
+                        <tr>
+                            <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+                            <td>
+                                {{ patient.patient_email }}
+
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                <p>None.</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

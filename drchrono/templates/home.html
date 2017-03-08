@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+
+    <div class="container">
+        <h3> Hello, Dr.{{ username }},</h3>
+        <br>
+        <p class="home-message">Hope you are having a great day! To make it better go ahead and send birthday wishes to your patients, they'll love it!
+            <br>
+            Click <a href="{% url 'user' %}">here</a> to see a list of birthdays today!
+        </p>
+
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,23 @@
+.login {
+    margin-top: 10%;
+}
+
+/* Just trying to be creative :P */
+.drchrono-logo {
+    background: #41A528;
+    color: white;
+    border-radius: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 3px;
+}
+
+.welcome {
+    margin: 4%;
+    padding: 4%;
+    border-radius: 2%;
+}
+
+.home-message {
+    font-size: 18px;
+}
