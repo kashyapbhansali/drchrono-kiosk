@@ -3,9 +3,17 @@ import datetime
 from pprint import pprint as pp
 
 
-def get_offices(url , headers):
+def get_doctor_data(request):
+    url = 'https://drchrono.com/api/users/current'
+    r = requests.get(url, headers=request.session['headers'])
+    r = r.json()
+    return r
+
+
+def get_offices(request):
     data_list = []
-    r = requests.get(url, headers=headers)
+    url = 'https://drchrono.com/api/offices'
+    r = requests.get(url, headers=request.session['headers'])
     print "get office request code:",r.status_code
     if r.status_code == 403:
         return data_list

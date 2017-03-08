@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout as drchrono_logout
 from django.core.mail import send_mail,send_mass_mail
 from .models import PatientModel
-from .forms import birthdayEmailForm, CheckinForm
+from .forms import *
 from django.conf import settings
 from services import *
 from pprint import pprint as pp
@@ -25,11 +25,14 @@ def setup_kiosk(request):
     request.session['headers'] = {
         'Authorization': 'Bearer %s' % request.session['doctor_access_token'],
     }
-    offices_url = 'https://drchrono.com/api/offices'
-    results = get_offices(offices_url, request.session['headers'])
+
+    results = get_offices(request)
+    request.session['doctor_data'] = get_doctor_data(request)
     pp(results)
 
-    return render(request, 'setup_kiosk.html', {})
+    context = {'doctor':request.session['doctor_data']}
+
+    return render(request, 'setup_kiosk.html', context)
 
 
 def checkin(request):
@@ -65,9 +68,13 @@ def checkin(request):
 
 
 def demographics(request):
-    #todo: display data and make it editabe by the patient
-    #todo: mark patient as arrived
-    context = {'results': request.session['patient_demographics']}
+    form = DemographicsForm(data = request.POST or None, initial=request.session['patient_demographics'])
+    if form.is_valid():
+        #todo: update demographics in model and call api
+        #todo: mark the patient as arrived
+        return redirect('/checkin')
+
+    context = {'results': request.session['patient_demographics'], 'form': form}
     return render(request, 'demographics.html', context)
 
 

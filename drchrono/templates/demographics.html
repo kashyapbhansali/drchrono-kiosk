@@ -1,6 +1,16 @@
 {% extends 'index.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-    <h1>Demographics</h1>
-    <pre>{{ results }}</pre>
+
+{#    <pre>{{ results }}</pre>#}
+    <div class="col-md-offset-4 col-md-4">
+        <h1 style="text-align: center">Demographics</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form | crispy }}
+            <input type="submit" value="Update &amp; Check-in" class="btn btn-success">
+        </form>
+    </div>
+
 {% endblock %}

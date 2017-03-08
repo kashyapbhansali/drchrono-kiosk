@@ -1,7 +1,7 @@
 {% extends 'index.html'%}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1>Setup Kiosk</h1>
+    <h1>Hello Dr.{{ doctor.username }}</h1>
 
     <a href="{% url 'checkin' %}" class="btn btn-primary" >Go to check-in</a>
 {% endblock %}
