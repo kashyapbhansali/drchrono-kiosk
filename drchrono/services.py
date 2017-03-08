@@ -13,24 +13,28 @@ def get_doctor_data(request):
 def get_offices(request):
     data_list = []
     url = 'https://drchrono.com/api/offices'
-    r = requests.get(url, headers=request.session['headers'])
-    print "get office request code:",r.status_code
-    if r.status_code == 403:
-        return data_list
+    while url:
+        r = requests.get(url, headers=request.session['headers'])
+        r = r.json()
 
-    data_list.append(r.json())
+        for office in r['results']:
+            data_list.append(office)
+
+        url = r['next']
+
     return data_list
 
-
-def get_todays_appointments(request, appointment_data):
-    #todo: filter appointments based on doctor_id, office_id
+def load_todays_appointments(request):
+    doctor = request.session['doctor_data']['doctor']
+    office = request.session['office_data']['id']
+    pp(office)
+    date = datetime.date.today().strftime('%Y-%m-%d')
     url = 'https://drchrono.com/api/appointments'
-    url = url + ''
+    url = url + '?doctor=' +str(doctor) +'&office=' +str(office) +'&date=' +str(date)
     results = []
     while url:
         r = requests.get(url, headers=request.session['headers'])
         r = r.json()
-        pp(r)
         for apt in r['results']:
             results.append(apt)
 

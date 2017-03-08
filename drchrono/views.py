@@ -27,8 +27,12 @@ def setup_kiosk(request):
     }
 
     results = get_offices(request)
+    #by default get primary office data  #todo: can select office
+    request.session['office_data'] = results[0]
     request.session['doctor_data'] = get_doctor_data(request)
-    pp(results)
+    #todo: save the appointment data to model
+    load_todays_appointments(request)
+    #pp(results)
 
     context = {'doctor':request.session['doctor_data']}
 
