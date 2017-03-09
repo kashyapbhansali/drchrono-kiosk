@@ -21,6 +21,7 @@ class PatientModel(models.Model):
         patient = (str(self.patient_id), self.first_name, self.last_name, str(self.birthday), str(self.patient_email))
         return separator.join(patient)
 
+
 class AppointmentModel(models.Model):
     id = models.CharField(primary_key=True, max_length=10)
     doctor = models.IntegerField()
@@ -31,12 +32,11 @@ class AppointmentModel(models.Model):
     status = models.CharField(max_length=20)
     deleted_flag = models.BooleanField()
     scheduled_time = models.DateTimeField()
-    #some extra fields for arrival and called in time information
-    arrival_time = models.DateTimeField()
-    call_in_time = models.DateTimeField()
+    # some extra fields for arrival and called in time information
+    arrival_time = models.DateTimeField(blank=True)
+    call_in_time = models.DateTimeField(blank=True)
+
     def __str__(self):
         separator = "|"
-        appt = ( 'pid:' +str(self.patient), 'did:' +str(self.doctor), 'status:' +str(self.status))
+        appt = ('pid:' + str(self.patient), 'did:' + str(self.doctor), 'status:' + str(self.status))
         return separator.join(appt)
-
-

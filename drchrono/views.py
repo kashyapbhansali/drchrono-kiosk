@@ -4,7 +4,7 @@ import requests
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as drchrono_logout
 from django.core.mail import send_mail, send_mass_mail
-from .models import PatientModel
+from .models import PatientModel, AppointmentModel
 from .forms import *
 from django.conf import settings
 from services import *
@@ -27,12 +27,30 @@ def setup_kiosk(request):
     # by default get primary office data  #todo: can select office
     request.session['office_data'] = results[0]
     request.session['doctor_data'] = get_doctor_data(request)
-    # todo: save the appointment data to model
-    load_todays_appointments(request)
-    # pp(results)
+
+    appointments = load_todays_appointments(request)
+    for apt in appointments:
+        a, created = AppointmentModel.objects.update_or_create(
+            id=apt['id'],
+            doctor=apt['doctor'],
+            patient=apt['patient'],
+            office=apt['office'],
+            exam_room=apt['exam_room'],
+            reason=apt['reason'],
+            status=apt['status'],
+            deleted_flag=apt['deleted_flag'],
+            scheduled_time=apt['scheduled_time'],
+            defaults={
+                'arrival_time': '0001-01-01',
+                'call_in_time': '0001-01-01',
+            },
+        )
+        if created:
+            print 'New Patient Created!'
+        else:
+            print 'Patient Exists'
 
     context = {'doctor': request.session['doctor_data']}
-
     return render(request, 'setup_kiosk.html', context)
 
 

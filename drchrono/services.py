@@ -38,11 +38,9 @@ def load_todays_appointments(request):
         r = r.json()
         for apt in r['results']:
             results.append(apt)
-
         url = r['next']
 
-    # todo: save results to appointments model
-    pp(results)
+    return results
 
 
 def check_patient_appointment(request, appointment_data):
