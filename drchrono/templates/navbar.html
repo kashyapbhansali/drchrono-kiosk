@@ -1,5 +1,5 @@
-{% url 'home' as home %}
-{% url 'user' as user %}
+{% url 'doctor' as doctor %}
+{% url 'setup_kiosk' as setup_kiosk %}
 
 
 <nav class="navbar navbar-default">
@@ -18,11 +18,11 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li {% if request.path == home %} class = "active" {% endif %}>
-            <a href="{% url 'home' %}"> Home </a>
+        <li {% if request.path == setup_kiosk %} class = "active" {% endif %}>
+            <a href="{% url 'setup_kiosk' %}"> Kiosk </a>
         </li>
-        <li {% if request.path == user %} class = "active" {% endif %}>
-            <a href="{% url 'user' %}"> User</a>
+        <li {% if request.path == doctor %} class = "active" {% endif %}>
+            <a href="{% url 'doctor' %}"> Doctor</a>
         </li>
       </ul>
 

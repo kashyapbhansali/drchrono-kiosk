@@ -8,8 +8,26 @@
 
         <table class="table">
             <tr>
-                <th></th>
+                <th>Patient</th>
+                <th>Exam room</th>
+                <th>Scheduled time</th>
+                <th>status</th>
             </tr>
+            {% for apt in appointments %}
+                <tr>
+                    <th>{{ apt.patient }}</th>
+                    <th>{{ apt.exam_room }}</th>
+                    <th>{{ apt.scheduled_time.time }}</th>
+                    <th>
+                        {% if apt.status == 'Arrived' %}
+                            <span class="label label-success">{{ apt.status }}</span>
+                            {% elif apt.status == ' In Session'%}
+                                <span class="label label-warning">{{ apt.status }}</span>
+                        {% endif %}
+
+                    </th>
+                </tr>
+            {% endfor %}
         </table>
     </div>
 {% endblock %}

@@ -30,14 +30,18 @@ class AppointmentModel(models.Model):
     office = models.IntegerField()
     exam_room = models.IntegerField()
     reason = models.CharField(max_length=1000, blank=True)
-    status = models.CharField(max_length=20)
+    status = models.CharField(max_length=20, null=True)
     deleted_flag = models.BooleanField()
     scheduled_time = models.DateTimeField()
     # some extra fields for arrival and called in time information
-    arrival_time = models.DateTimeField(blank=True)
-    call_in_time = models.DateTimeField(blank=True)
+    arrival_time = models.DateTimeField(blank=True, null=True)
+    call_in_time = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         separator = "|"
-        appt = ('pid:' + str(self.patient), 'did:' + str(self.doctor), 'status:' + str(self.status), 'apt:' + str(self.scheduled_time) )
+        appt = ('pid:' + str(self.patient),
+                'did:' + str(self.doctor),
+                'office:' + str(self.office),
+                'status:' + str(self.status),
+                'apt:' + str(self.scheduled_time) )
         return separator.join(appt)

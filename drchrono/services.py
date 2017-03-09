@@ -29,7 +29,7 @@ def get_offices(request):
 def load_todays_appointments(request):
     doctor = request.session['doctor_data']['doctor']
     office = request.session['office_data']['id']
-    pp(office)
+    # pp(office)
     date = datetime.date.today().strftime('%Y-%m-%d')
     url = 'https://drchrono.com/api/appointments'
     url = url + '?doctor=' + str(doctor) + '&office=' + str(office) + '&date=' + str(date)
@@ -53,8 +53,6 @@ def check_patient_appointment(request, appointment_data):
     while url:
         r = requests.get(url, headers=request.session['headers'])
         r = r.json()
-        # print 'appt!!!!!:'
-        # pp(r)
         for apt in r['results']:
             results.append(apt)
 
@@ -77,11 +75,11 @@ def check_get_demographics(request, checkin_data):
     while url:
         r = requests.get(url, headers=request.session['headers'])
         r = r.json()
-        pp(r)
+        # pp(r)
         for patient in r['results']:
-            if patient['first_name'] == fname and patient['last_name'] == lname and patient[
-                'social_security_number'] == ssn:
-                return patient
+            if patient['first_name'] == fname and patient['last_name'] == lname:
+                if patient['social_security_number'] == ssn:
+                    return patient
 
         url = r['next']
 

@@ -84,10 +84,24 @@ def checkin(request):
 
 
 def demographics(request):
-    form = DemographicsForm(data=request.POST or None, initial=request.session['patient_demographics'])
+    form = DemographicsForm(data=request.POST or None,
+                            initial=request.session['patient_demographics'])
     if form.is_valid():
         # todo: update patient demographics
         # todo: mark the patient as arrived and save timing info to model
+        patient = form.cleaned_data['id']
+        doctor = request.session['doctor_data']['id']
+        office = request.session['office_data']['id']
+        arrival_time = datetime.datetime.now().isoformat()
+        status = 'Arrived'
+        # assuming patient has only one appointment scheduled in a day.
+        # since not using appointment id to update appt status
+        # todo: my logged in doctor id is different
+        updated = AppointmentModel.objects.filter(patient=patient,
+                                                  office=office).update(arrival_time=arrival_time, status=status)
+
+        print 'Patient %d, Doctor %d, status updated to arrived' % (patient, doctor)
+        # pp(AppointmentModel.objects.all())
         return redirect('/checkin')
 
     context = {'results': request.session['patient_demographics'], 'form': form}
@@ -101,8 +115,7 @@ def doctor(request):
     current_year = datetime.date.today().year
     appts = AppointmentModel.objects.filter(scheduled_time__day=current_day,
                                             scheduled_time__month=current_month,
-                                            scheduled_time__year=current_year
-                                            )
+                                            scheduled_time__year=current_year).order_by('scheduled_time')
     # pp(appts)
     context = {'appointments': appts}
     return render(request, 'doctor.html', context)
@@ -187,5 +200,8 @@ def user(request):
 
 
 def logout(request):
+    # todo: before logout post today's appointments data using api
+    # for development purpose : clear db on logout
+    AppointmentModel.objects.all().delete()
     drchrono_logout(request)
     return redirect('/')
