@@ -3,32 +3,39 @@
 
 {% block content %}
     <div class="">
-        <pre>{{ appointments }} </pre>
-        <h1>Today's Appointments</h1>
-
-        <table class="table">
-            <tr>
-                <th>Patient</th>
-                <th>Exam room</th>
-                <th>Scheduled time</th>
-                <th>status</th>
-            </tr>
-            {% for apt in appointments %}
+        <h1>Today's Appointments {{ current_time.date }}</h1>
+        <div class="col-md-6">
+            <table class="table table-bordered">
                 <tr>
-                    <th>{{ apt.patient }}</th>
-                    <th>{{ apt.exam_room }}</th>
-                    <th>{{ apt.scheduled_time.time }}</th>
-                    <th>
-                        {% if apt.status == 'Arrived' %}
-                            <span class="label label-success">{{ apt.status }}</span>
-                            {% elif apt.status == ' In Session'%}
-                                <span class="label label-warning">{{ apt.status }}</span>
-                        {% endif %}
-
-                    </th>
+                    <th>Patient</th>
+                    <th>Exam room</th>
+                    <th>Scheduled time</th>
+                    <th>status</th>
                 </tr>
-            {% endfor %}
-        </table>
+                {% for apt in appointments %}
+                    <tr>
+                        <td>{{ apt.patient }}</td>
+                        <td>{{ apt.exam_room }}</td>
+                        <td>{{ apt.scheduled_time.time }}</td>
+                        <td>
+                            {% if apt.status == 'Arrived' %}
+                                <span class="label label-success">{{ apt.status }}</span>
+                            {% elif apt.status == 'In Session' %}
+                                <span class="label label-warning">{{ apt.status }}</span>
+                            {% elif current_time.time > apt.scheduled_time.time %}
+                                {% if status == None or status == '' %}
+                                    <span class="label label-danger">No Show</span>
+                                {% endif %}
+                            {% else %}
+                                <span class=""> ------- </span>
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
     </div>
 {% endblock %}
 

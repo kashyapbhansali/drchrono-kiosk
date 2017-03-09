@@ -117,8 +117,16 @@ def doctor(request):
                                             scheduled_time__month=current_month,
                                             scheduled_time__year=current_year).order_by('scheduled_time')
     # pp(appts)
-    context = {'appointments': appts}
+    context = {'appointments': appts, 'current_time':datetime.datetime.now()}
     return render(request, 'doctor.html', context)
+
+
+def logout(request):
+    # todo: before logout post today's appointments data using api
+    # for development purpose : clear db on logout
+    AppointmentModel.objects.all().delete()
+    drchrono_logout(request)
+    return redirect('/')
 
 
 def home(request):
@@ -197,11 +205,3 @@ def user(request):
     context = {'patient_data': p, 'form': form, 'confirmation': confirmation, 'birthdays': birthdays}
 
     return render(request, template, context)
-
-
-def logout(request):
-    # todo: before logout post today's appointments data using api
-    # for development purpose : clear db on logout
-    AppointmentModel.objects.all().delete()
-    drchrono_logout(request)
-    return redirect('/')

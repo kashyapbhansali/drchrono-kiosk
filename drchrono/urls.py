@@ -16,10 +16,10 @@ urlpatterns = [
 
     url(r'^doctor/$', drchrono_views.doctor, name='doctor'),
 
-    url(r'^home/$', drchrono_views.home, name='home'),
-
-    url(r'^user/$', drchrono_views.user, name='user'),
-
     url(r'^logout/$', drchrono_views.logout, name='logout'),
+
+    # url(r'^home/$', drchrono_views.home, name='home'),
+    #
+    # url(r'^user/$', drchrono_views.user, name='user'),
 
 ]
