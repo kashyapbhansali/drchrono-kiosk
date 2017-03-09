@@ -1,6 +1,7 @@
-import requests
 import datetime
 from pprint import pprint as pp
+
+import requests
 
 
 def get_doctor_data(request):

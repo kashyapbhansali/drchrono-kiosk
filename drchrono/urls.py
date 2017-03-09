@@ -11,7 +11,10 @@ urlpatterns = [
     url(r'^setup_kiosk/$', drchrono_views.setup_kiosk, name='setup_kiosk'),
 
     url(r'^checkin/$', drchrono_views.checkin, name='checkin'),
+
     url(r'^demographics/$', drchrono_views.demographics, name='demographics'),
+
+    url(r'^doctor/$', drchrono_views.doctor, name='doctor'),
 
     url(r'^home/$', drchrono_views.home, name='home'),
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 import datetime
+import pytz
 
 
 # Create your models here.
@@ -38,5 +39,5 @@ class AppointmentModel(models.Model):
 
     def __str__(self):
         separator = "|"
-        appt = ('pid:' + str(self.patient), 'did:' + str(self.doctor), 'status:' + str(self.status))
+        appt = ('pid:' + str(self.patient), 'did:' + str(self.doctor), 'status:' + str(self.status), 'apt:' + str(self.scheduled_time) )
         return separator.join(appt)

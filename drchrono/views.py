@@ -1,14 +1,14 @@
 # Create your views here.
-import datetime
-import requests
-from django.shortcuts import render, redirect
-from django.contrib.auth import logout as drchrono_logout
-from django.core.mail import send_mail, send_mass_mail
-from .models import PatientModel, AppointmentModel
-from .forms import *
-from django.conf import settings
-from services import *
 from pprint import pprint as pp
+
+from django.conf import settings
+from django.contrib.auth import logout as drchrono_logout
+from django.core.mail import send_mass_mail
+from django.shortcuts import render, redirect
+
+from services import *
+from .forms import *
+from .models import PatientModel, AppointmentModel
 
 
 def setup_kiosk(request):
@@ -92,6 +92,19 @@ def demographics(request):
 
     context = {'results': request.session['patient_demographics'], 'form': form}
     return render(request, 'demographics.html', context)
+
+
+def doctor(request):
+    # load todays appointments order by scheduled_time
+    current_day = datetime.date.today().day
+    current_month = datetime.date.today().month
+    current_year = datetime.date.today().year
+    appts = AppointmentModel.objects.filter(scheduled_time__day=current_day,
+                                            scheduled_time__month=current_month,
+                                            scheduled_time__year=current_year)
+    #pp(appts)
+    context = {'appointments': appts}
+    return render(request, 'doctor.html', context)
 
 
 def home(request):
