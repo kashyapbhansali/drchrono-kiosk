@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ca5a4caa-1097-40de-9450-c6c7b1a3ac6e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/drchrono/templates/doctor.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/drchrono/models.py" afterPath="$PROJECT_DIR$/drchrono/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/drchrono/services.py" afterPath="$PROJECT_DIR$/drchrono/services.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/drchrono/urls.py" afterPath="$PROJECT_DIR$/drchrono/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/drchrono/views.py" afterPath="$PROJECT_DIR$/drchrono/views.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,11 +33,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/drchrono/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
-              <caret line="104" column="5" lean-forward="false" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
+            <state relative-caret-position="484">
+              <caret line="43" column="16" lean-forward="false" selection-start-line="43" selection-start-column="18" selection-end-line="44" selection-end-column="47" />
               <folding>
                 <element signature="e#26#57#0" expanded="true" />
               </folding>
@@ -123,11 +119,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/drchrono/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="726">
-              <caret line="36" column="51" lean-forward="true" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="51" />
+            <state relative-caret-position="660">
+              <caret line="30" column="37" lean-forward="true" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -169,8 +165,8 @@
         <option value="$PROJECT_DIR$/drchrono/urls.py" />
         <option value="$PROJECT_DIR$/drchrono/models.py" />
         <option value="$PROJECT_DIR$/drchrono/services.py" />
-        <option value="$PROJECT_DIR$/drchrono/views.py" />
         <option value="$PROJECT_DIR$/drchrono/templates/doctor.html" />
+        <option value="$PROJECT_DIR$/drchrono/views.py" />
       </list>
     </option>
   </component>
@@ -678,16 +674,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/drchrono/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="104" column="5" lean-forward="false" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
-          <folding>
-            <element signature="e#26#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/drchrono/templates/doctor.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -698,10 +684,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/drchrono/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="726">
-          <caret line="36" column="51" lean-forward="true" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="51" />
+        <state relative-caret-position="660">
+          <caret line="30" column="37" lean-forward="true" selection-start-line="30" selection-start-column="37" selection-end-line="30" selection-end-column="37" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/drchrono/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="43" column="16" lean-forward="false" selection-start-line="43" selection-start-column="18" selection-end-line="44" selection-end-column="47" />
+          <folding>
+            <element signature="e#26#57#0" expanded="true" />
           </folding>
         </state>
       </provider>

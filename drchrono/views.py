@@ -35,14 +35,14 @@ def setup_kiosk(request):
             doctor=apt['doctor'],
             patient=apt['patient'],
             office=apt['office'],
-            exam_room=apt['exam_room'],
-            reason=apt['reason'],
-            status=apt['status'],
-            deleted_flag=apt['deleted_flag'],
-            scheduled_time=apt['scheduled_time'],
             defaults={
-                'arrival_time': '0001-01-01',
-                'call_in_time': '0001-01-01',
+                'exam_room': apt['exam_room'],
+                'reason': apt['reason'],
+                'status': apt['status'],
+                'deleted_flag': apt['deleted_flag'],
+                'scheduled_time': apt['scheduled_time'],
+                # 'arrival_time': '0001-01-01',
+                # 'call_in_time': '0001-01-01',
             },
         )
         if created:
@@ -101,8 +101,9 @@ def doctor(request):
     current_year = datetime.date.today().year
     appts = AppointmentModel.objects.filter(scheduled_time__day=current_day,
                                             scheduled_time__month=current_month,
-                                            scheduled_time__year=current_year)
-    #pp(appts)
+                                            scheduled_time__year=current_year
+                                            )
+    # pp(appts)
     context = {'appointments': appts}
     return render(request, 'doctor.html', context)
 
