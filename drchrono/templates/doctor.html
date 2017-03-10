@@ -2,40 +2,64 @@
 
 
 {% block content %}
-    <div class="">
-        <h1>Today's Appointments {{ current_time.date }}</h1>
-        <div class="col-md-6">
-            <table class="table table-bordered">
+
+
+    <div class="col-md-6">
+        <h2>Today's Appointments <span class="current_time"> ({{ current_time.date }})</span></h2>
+        <table class="table table-hover">
+            <tr>
+                <th>Patient</th>
+                <th>Exam room</th>
+                <th>Scheduled time</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for apt in appointments %}
                 <tr>
-                    <th>Patient</th>
-                    <th>Exam room</th>
-                    <th>Scheduled time</th>
-                    <th>status</th>
-                </tr>
-                {% for apt in appointments %}
-                    <tr>
-                        <td>{{ apt.patient }}</td>
-                        <td>{{ apt.exam_room }}</td>
-                        <td>{{ apt.scheduled_time.time }}</td>
-                        <td>
-                            {% if apt.status == 'Arrived' %}
-                                <span class="label label-success">{{ apt.status }}</span>
-                            {% elif apt.status == 'In Session' %}
-                                <span class="label label-warning">{{ apt.status }}</span>
-                            {% elif current_time.time > apt.scheduled_time.time %}
-                                {% if status == None or status == '' %}
-                                    <span class="label label-danger">No Show</span>
-                                {% endif %}
-                            {% else %}
-                                <span class=""> ------- </span>
+                    <td>{{ apt.patient }}</td>
+                    <td>{{ apt.exam_room }}</td>
+                    <td>{{ apt.scheduled_time.time }}</td>
+                    <td>{{ apt.reason }}</td>
+                    <td>
+                        {% if apt.status == 'Arrived' %}
+                            <span class="label label-success">{{ apt.status }}</span>
+                        {% elif apt.status == 'In Session' %}
+                            <span class="label label-warning">{{ apt.status }}</span>
+                        {% elif apt.status == 'Complete' %}
+                            <span class="label label-primary">{{ apt.status }}</span>
+                        {% elif current_time.time > apt.scheduled_time.time %}
+                            {% if status == None or status == '' %}
+                                <span class="label label-danger">No Show</span>
                             {% endif %}
+                        {% else %}
+                            <span class=""> ------- </span>
+                        {% endif %}
 
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+                    </td>
 
+                    <td>
+                        {% if apt.status == 'Arrived' %}
+
+                            <a class="btn btn-sm" href="{% url 'callin' apt_id=apt.id %}">
+                                Call-in </a>
+
+                        {% elif apt.status == 'In Session' %}
+
+                            <a class="btn btn-sm" href="{% url 'mark_complete' apt_id=apt.id %}">
+                                Mark Complete </a>
+                        {% elif apt.status == 'Complete' or apt.status == '' or apt.status == None %}
+
+                            <a class="btn btn-sm" href="{% url 'mark_complete' apt_id=apt.id %}" disabled="">
+                                ------ </a>
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+            {% endfor %}
+        </table>
     </div>
+
 {% endblock %}
 

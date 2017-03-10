@@ -23,11 +23,19 @@ def setup_kiosk(request):
         'Authorization': 'Bearer %s' % request.session['doctor_access_token'],
     }
 
-    results = get_offices(request)
-    # by default get primary office data  #todo: can select office
-    request.session['office_data'] = results[0]
+    offices = get_offices(request)
+    pp(offices)
     request.session['doctor_data'] = get_doctor_data(request)
 
+    context = {'doctor': request.session['doctor_data'], 'offices': offices}
+    return render(request, 'setup_kiosk.html', context)
+
+
+def office(request, office_id):
+    request.session['office_data'] = {'id': 0}
+    request.session['office_data']['id'] = office_id
+
+    # loading appointments based on office selection
     appointments = load_todays_appointments(request)
     for apt in appointments:
         a, created = AppointmentModel.objects.update_or_create(
@@ -49,15 +57,12 @@ def setup_kiosk(request):
             print 'New Patient Created!'
         else:
             print 'Patient Exists'
-
-    context = {'doctor': request.session['doctor_data']}
-    return render(request, 'setup_kiosk.html', context)
+    return redirect('/checkin')
 
 
-def checkin(request):
+def checkin(request, message=''):
     checkin_form = CheckinForm(request.POST or None)
-    context = {'form': checkin_form}
-    # todo: query appoints data and validate the user
+    context = {'form': checkin_form, 'message':message}
 
     # check if user data is valid
     if checkin_form.is_valid():
@@ -97,12 +102,12 @@ def demographics(request):
         # assuming patient has only one appointment scheduled in a day.
         # since not using appointment id to update appt status
         # todo: my logged in doctor id is different
-        updated = AppointmentModel.objects.filter(patient=patient,
-                                                  office=office).update(arrival_time=arrival_time, status=status)
+        AppointmentModel.objects.filter(patient=patient,
+                                        office=office).update(arrival_time=arrival_time, status=status)
 
         print 'Patient %d, Doctor %d, status updated to arrived' % (patient, doctor)
         # pp(AppointmentModel.objects.all())
-        return redirect('/checkin')
+        return redirect('/checkin/updated')
 
     context = {'results': request.session['patient_demographics'], 'form': form}
     return render(request, 'demographics.html', context)
@@ -117,8 +122,23 @@ def doctor(request):
                                             scheduled_time__month=current_month,
                                             scheduled_time__year=current_year).order_by('scheduled_time')
     # pp(appts)
-    context = {'appointments': appts, 'current_time':datetime.datetime.now()}
+    context = {'appointments': appts, 'current_time': datetime.datetime.now()}
     return render(request, 'doctor.html', context)
+
+
+def mark_complete(request, apt_id):
+    # set patient-id's status to completed in appointment model
+    AppointmentModel.objects.filter(id=apt_id).update(status='Complete')
+    print 'apt %d , status set to In Session.'
+    return redirect('/doctor')
+
+
+def call_in(request, apt_id):
+    # set patient-id's call in time and status to In Session in appointment model
+    call_in_time = datetime.datetime.now().isoformat()
+    AppointmentModel.objects.filter(id=apt_id).update(call_in_time=call_in_time, status='In Session')
+    print 'apt %d , status set to In Session.'
+    return redirect('/doctor')
 
 
 def logout(request):

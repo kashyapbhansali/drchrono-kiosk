@@ -2,46 +2,52 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-      <title>drchrono Birthday Reminder</title>
-      <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-      <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
-  <body>
+<head>
+    <title>drchrono Kiosk</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
 
 
+{% if not request.user.is_authenticated %}
+    <div class="col-md-offset-4 col-md-4 login">
+        <div class="jumbotron welcome">
+            <h1><span class="drchrono-logo">dr</span>chrono Kiosk</h1>
+            <hr>
+            <h4>Quick . Easy . Efficient</h4>
 
-  {% if not request.user.is_authenticated %}
-      <div class="col-md-offset-2 col-md-8 login">
-          <div class="jumbotron welcome">
-              <h1><span class="drchrono-logo">dr</span>chrono Kiosk</h1>
+            <br>
+            <p>
+                Any doctor's virtual and most efficient receptionist. Login in to setup your office check-in kiosk.
+                <br>
+            </p>
+            <br>
+            <br>
+            <a class="btn btn-block btn-lg btn-success login-button" href="{% url 'social:begin' 'drchrono' %}">
+                Login with drchrono
+            </a>
+        </div>
+    </div>
 
-              <p>Any doctor's virtual and most efficient receptionist. To enable the Kiosk for today's session please go ahead and login via drchrono!</p>
-              <br>
-              <a class="btn btn-lg btn-success login-button" href="{% url 'social:begin' 'drchrono' %}">
-                  Log in with drchrono
-              </a>
-          </div>
-      </div>
 
+{% else %}
 
-  {% else %}
+    {% block navbar %}
+        {% include 'navbar.html' %}
+    {% endblock %}
 
-      {% block navbar %}
-          {% include 'navbar.html' %}
-      {% endblock %}
+    <div class="container">
+        {% block content %}
 
-      <div class="container">
-          {% block content %}
+            <h3>Patient details</h3>
 
-                <h3>Patient details</h3>
+        {% endblock %}
+    </div>
+{% endif %}
 
-          {% endblock %}
-      </div>
-  {% endif %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="{% static 'js/bootstrap.min.js' %}"></script>
-
-  </body>
+</body>
 </html>

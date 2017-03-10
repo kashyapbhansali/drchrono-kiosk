@@ -1,7 +1,46 @@
-{% extends 'index.html'%}
+{% extends 'index.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1>Hello Dr.{{ doctor.username }}</h1>
 
-    <a href="{% url 'checkin' %}" class="btn btn-primary" >Go to check-in</a>
+
+    <div class="col-md-offset-3 col-md-6 offices">
+        <h1>Select an Office</h1>
+
+        {% for office in offices %}
+            <div class="jumbotron">
+                <div class="office">
+                    <h3>Office {{ forloop.counter }}</h3>
+                    <table class="table table-striped">
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ office.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Office Name</th>
+                            <td>{{ office.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Country</th>
+                            <td>{{ office.country }}</td>
+                        </tr>
+                        <tr>
+                            <th>State</th>
+                            <td>{{ office.state }}</td>
+                        </tr>
+                        {% if office.address %}
+                            <tr>
+                                <th>Address</th>
+                                <td>{{ office.address }}</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                <a href="{% url 'office' office_id=office.id %}" class="btn btn-primary office_setup">Setup Kiosk</a>
+            </div>
+
+        {% endfor %}
+
+
+    </div>
+
 {% endblock %}

@@ -27,7 +27,7 @@ def get_offices(request):
 
 
 def load_todays_appointments(request):
-    doctor = request.session['doctor_data']['doctor']
+    doctor = request.session['doctor_data']['id']
     office = request.session['office_data']['id']
     # pp(office)
     date = datetime.date.today().strftime('%Y-%m-%d')

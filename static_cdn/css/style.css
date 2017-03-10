@@ -18,6 +18,10 @@
     border-radius: 2%;
 }
 
+.welcome h1 {
+    font-size: 25px;
+}
+
 .home-message {
     font-size: 18px;
 }

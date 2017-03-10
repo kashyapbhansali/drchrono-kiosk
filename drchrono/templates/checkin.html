@@ -1,17 +1,27 @@
 {% extends 'index.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <h1>Patient Check-in</h1>
-    <br>
-    {% if error_message %}
-        <div class="alert alert-danger">{{ error_message }}</div>
-    {% endif %}
 
-    <div class="col-md-6 col-sm-12 col-xs-12">
-        <form method="post" action="">
-            {% csrf_token %}
-            {{ form | crispy }}
-            <input type="submit" value="Next" class="btn btn-success btn-lg">
-        </form>
+    <div class="col-md-offset-3 col-md-6">
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+            <br>
+        {% elif message == 'updated' %}
+            <div class="alert alert-success"> Your demographics have been updated and you are in the Queue!</div>
+            <br>
+        {% endif %}
+        <div class="checkin">
+            <h2>Patient Check-in</h2>
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <br>
+                <input type="submit" value="Next" class="btn btn-lg btn-success btn-block">
+            </form>
+        </div>
+
+
     </div>
+
+
 {% endblock %}

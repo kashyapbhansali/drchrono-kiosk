@@ -16,8 +16,39 @@
     margin: 4%;
     padding: 4%;
     border-radius: 2%;
+    text-align: center;
+}
+
+.welcome h1 {
+    font-size: 50px;
+}
+
+.welcome h4 {
+    text-align: center;
 }
 
 .home-message {
     font-size: 18px;
+}
+
+.offices h1 {
+    text-align: center;
+}
+
+.office a {
+    position: absolute;
+    bottom:0;
+    right:0;
+}
+
+.checkin {
+    border-radius: 5px;
+    #border: 1px solid;
+    padding: 20px;
+    background-color: #f5f5f5;
+    box-shadow: 0 1px 0 rgba(0,0,0,.15);
+}
+
+.current_time {
+    font-size: 20px;
 }
