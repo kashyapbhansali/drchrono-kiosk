@@ -52,3 +52,7 @@
 .current_time {
     font-size: 20px;
 }
+
+.avg_time {
+    text-align: center;
+}

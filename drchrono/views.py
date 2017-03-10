@@ -124,10 +124,10 @@ def doctor(request):
     appts = AppointmentModel.objects.filter(scheduled_time__day=current_day,
                                             scheduled_time__month=current_month,
                                             scheduled_time__year=current_year).order_by('scheduled_time')
-    pp(appts)
+    #pp(appts)
 
     # logic for calculating average time
-    apt_for_avg_time = appts.filter(status='Completed')
+    apt_for_avg_time = appts.filter(status='Complete')
     avg_time = 0
     count = 0
     sum = 0
@@ -135,11 +135,12 @@ def doctor(request):
         count = count + 1
         time_diff = a.call_in_time - a.arrival_time
         sum = sum + time_diff.total_seconds()
+        print sum
 
     if count != 0:
-        avg_time = (sum / 60) / count
+        avg_time = int((sum / 60) / count)
 
-    print datetime.datetime.now()
+    #print datetime.datetime.now()
     context = {'appointments': appts, 'current_time': datetime.datetime.now(), 'avg_time': avg_time}
     return render(request, 'doctor.html', context)
 
@@ -153,7 +154,7 @@ def mark_complete(request, apt_id):
 
 def call_in(request, apt_id):
     # set patient-id's call in time and status to In Session in appointment model
-    call_in_time = datetime.datetime.now().isoformat()
+    call_in_time = datetime.datetime.now()
     AppointmentModel.objects.filter(id=apt_id).update(call_in_time=call_in_time, status='In Session')
     print 'apt %d , status set to In Session.'
     return redirect('/doctor')
