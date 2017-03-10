@@ -29,4 +29,4 @@ class DemographicsForm(forms.Form):
     chart_id = forms.CharField(max_length=20, label='Chart Id', required=True, widget=forms.HiddenInput())
     email = forms.EmailField()
     gender = forms.CharField(max_length=10)
-    home_phone = forms.CharField(max_length=10, required=False)
+    home_phone = forms.CharField(max_length=12, required=False)

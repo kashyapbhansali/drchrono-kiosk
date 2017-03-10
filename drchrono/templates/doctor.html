@@ -4,7 +4,7 @@
 {% block content %}
 
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h2>Today's Appointments <span class="current_time"> ({{ current_time.date }})</span></h2>
         <table class="table table-hover">
             <tr>
@@ -47,7 +47,7 @@
                         {% elif apt.status == 'In Session' %}
 
                             <a class="btn btn-sm" href="{% url 'mark_complete' apt_id=apt.id %}">
-                                Mark Complete </a>
+                                End </a>
                         {% elif apt.status == 'Complete' or apt.status == '' or apt.status == None %}
 
                             <a class="btn btn-sm" href="{% url 'mark_complete' apt_id=apt.id %}" disabled="">
