@@ -124,9 +124,18 @@ def doctor(request):
     # pp(appts)
 
     # logic for calculating average time
-    apt_for_avg_time = appts.filter(status='Arrived').exclude(call_in_time=None)
-    pp(apt_for_avg_time)
-    context = {'appointments': appts, 'current_time': datetime.datetime.now()}
+    apt_for_avg_time = appts.filter(status='Completed')
+    avg_time = 0
+    count = 0
+    sum =0
+    for a in apt_for_avg_time:
+        count = count + 1
+        time_diff = a.call_in_time - a.arrival_time
+        sum = sum + time_diff.total_seconds()
+
+    if count != 0:
+        avg_time = (sum/60)/count
+    context = {'appointments': appts, 'current_time': datetime.datetime.now(), 'avg_time':avg_time}
     return render(request, 'doctor.html', context)
 
 
