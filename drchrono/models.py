@@ -1,7 +1,7 @@
+import datetime
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
-import datetime
-import pytz
 
 
 # Create your models here.
@@ -43,5 +43,7 @@ class AppointmentModel(models.Model):
                 'did:' + str(self.doctor),
                 'office:' + str(self.office),
                 'status:' + str(self.status),
-                'apt:' + str(self.scheduled_time) )
+                'apt:' + str(self.scheduled_time),
+                'arrival' + str(self.arrival_time),
+                'callin' + str(self.call_in_time))
         return separator.join(appt)

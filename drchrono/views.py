@@ -122,6 +122,10 @@ def doctor(request):
                                             scheduled_time__month=current_month,
                                             scheduled_time__year=current_year).order_by('scheduled_time')
     # pp(appts)
+
+    # logic for calculating average time
+    apt_for_avg_time = appts.filter(status='Arrived').exclude(call_in_time=None)
+    pp(apt_for_avg_time)
     context = {'appointments': appts, 'current_time': datetime.datetime.now()}
     return render(request, 'doctor.html', context)
 
