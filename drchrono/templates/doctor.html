@@ -1,9 +1,9 @@
 {% extends 'index.html' %}
-
+{% load app_filters %}
 
 {% block content %}
     <div class="col-md-2">
-    Average Wait Time:
+        Average Wait Time:
         {{ avg_time }}
     </div>
 
@@ -61,7 +61,7 @@
                     </td>
                     <td>
                         {% if apt.status == 'Arrived' %}
-                            {{ apt.arrival_time | timesince }}
+                            {{ apt.arrival_time | time_from_now }} mins
                         {% else %}
                             <a class="btn btn-sm" href="{% url 'mark_complete' apt_id=apt.id %}" disabled="">
                                 ------ </a>

@@ -15,7 +15,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = '=*l&a&rk7jmiw$3euke*z9lu-na!^j^i&ddejfik!ajqlaymmc'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -63,7 +61,7 @@ ROOT_URLCONF = 'drchrono.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates').replace('\\','/'),],
+        'DIRS': [os.path.join(BASE_DIR, 'templates').replace('\\', '/'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,7 +78,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'drchrono.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -90,7 +87,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -105,7 +101,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -119,8 +114,7 @@ SOCIAL_AUTH_DRCHRONO_SECRET = 'DxxB9rcQZt8usKWxagbmhTfPT9sTUYTkZZkhOVWwBm7c6t9Fz
 SOCIAL_AUTH_DRCHRONO_SCOPE = ['user:read patients:read calendar:read clinical:read']
 LOGIN_REDIRECT_URL = '/setup_kiosk'
 
-
-#setting up SMTP for emails
+# setting up SMTP for emails
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'kashyapbhansali7@gmail.com'
 EMAIL_HOST_PASSWORD = ''
@@ -129,5 +123,5 @@ EMAIL_USE_TLS = True
 EMAIL_BIRTHDAY_DEFAULT_MESSAGE = "Hi, \n\nWishing you a very Happy Birthday! On this occassion we invite you for a free checkup, " \
                                  "so that you have a healthy & wealthy year ahead :) \n\n- drchrono team"
 
-#config for crispy forms
+# config for crispy forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^office/(?P<office_id>[0-9]+)/$', drchrono_views.office, name='office'),
 
     url(r'^checkin/?(?P<message>[a-z]+)?/?$', drchrono_views.checkin, name='checkin'),
+
     url(r'^checkin/$', drchrono_views.checkin, name='checkin'),
 
     url(r'^demographics/$', drchrono_views.demographics, name='demographics'),

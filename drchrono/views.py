@@ -62,7 +62,7 @@ def office(request, office_id):
 
 def checkin(request, message=''):
     checkin_form = CheckinForm(request.POST or None)
-    context = {'form': checkin_form, 'message':message}
+    context = {'form': checkin_form, 'message': message}
 
     # check if user data is valid
     if checkin_form.is_valid():
@@ -97,13 +97,16 @@ def demographics(request):
         patient = form.cleaned_data['id']
         doctor = request.session['doctor_data']['id']
         office = request.session['office_data']['id']
-        arrival_time = datetime.datetime.now().isoformat()
+        arrival_time = datetime.datetime.now()
         status = 'Arrived'
         # assuming patient has only one appointment scheduled in a day.
         # since not using appointment id to update appt status
         # todo: my logged in doctor id is different
-        AppointmentModel.objects.filter(patient=patient,
-                                        office=office).update(arrival_time=arrival_time, status=status)
+        a = AppointmentModel.objects.filter(patient=patient, office=office).earliest('scheduled_time')
+        # .update(arrival_time=arrival_time, status=status)
+        a.arrival_time = arrival_time
+        a.status = status
+        a.save()
 
         print 'Patient %d, Doctor %d, status updated to arrived' % (patient, doctor)
         # pp(AppointmentModel.objects.all())
@@ -121,21 +124,23 @@ def doctor(request):
     appts = AppointmentModel.objects.filter(scheduled_time__day=current_day,
                                             scheduled_time__month=current_month,
                                             scheduled_time__year=current_year).order_by('scheduled_time')
-    # pp(appts)
+    pp(appts)
 
     # logic for calculating average time
     apt_for_avg_time = appts.filter(status='Completed')
     avg_time = 0
     count = 0
-    sum =0
+    sum = 0
     for a in apt_for_avg_time:
         count = count + 1
         time_diff = a.call_in_time - a.arrival_time
         sum = sum + time_diff.total_seconds()
 
     if count != 0:
-        avg_time = (sum/60)/count
-    context = {'appointments': appts, 'current_time': datetime.datetime.now(), 'avg_time':avg_time}
+        avg_time = (sum / 60) / count
+
+    print datetime.datetime.now()
+    context = {'appointments': appts, 'current_time': datetime.datetime.now(), 'avg_time': avg_time}
     return render(request, 'doctor.html', context)
 
 
@@ -160,81 +165,3 @@ def logout(request):
     AppointmentModel.objects.all().delete()
     drchrono_logout(request)
     return redirect('/')
-
-
-def home(request):
-    if not request.user.is_authenticated():
-        return redirect('/')
-
-    template = 'home.html'
-    context = {'username': request.user}
-    user_instance = request.user.social_auth.get()
-    # access_token = user_instance.extra_data['access_token']
-    request.session['access_token'] = user_instance.extra_data['access_token']
-    access_token = request.session['access_token']
-    headers = {
-        'Authorization': 'Bearer %s' % access_token,
-    }
-
-    # this endpoint returns a few lists of patients at a time
-    # it has next and previous points to indicate if more patients are available
-    patients_url = 'https://drchrono.com/api/patients'
-    patient_list = []
-
-    while True:
-        r = requests.get(patients_url, headers=headers)
-        # print r.raise_for_status()
-        patient_data = r.json()
-        # pprint(patient_data)
-        patient_list.extend(patient_data['results'])
-        if not patient_data['next']:
-            break
-
-    # save data using PatientModel
-
-    for patient in patient_list:
-        # defuult date if birthdate not available
-        dob = '0001-01-01'
-        if patient['date_of_birth']:
-            dob = patient['date_of_birth']
-        p = PatientModel(
-            first_name=patient['first_name'],
-            last_name=patient['last_name'],
-            doctor_id=patient['doctor'],
-            gender=patient['gender'],
-            birthday=dob,
-            patient_id=patient['id'],
-            patient_email=patient['email']
-        )
-        p.save()
-
-    return render(request, template, context)
-
-
-def user(request):
-    # get all patients who have an email id and birthdate
-    message = settings.EMAIL_BIRTHDAY_DEFAULT_MESSAGE
-    p = PatientModel.objects.exclude(patient_email="")
-    birthdays = PatientModel.objects.filter(birthday__day=datetime.date.today().day,
-                                            birthday__month=datetime.date.today().month).exclude(birthday__year=1)
-    birthday_email_list = map(lambda x: x['patient_email'], birthdays.values())
-    # pprint(birthday_email_list)
-    # pprint(birthdays)
-    form = birthdayEmailForm(request.POST or None, initial={'message': message})
-    confirmation = None
-
-    if form.is_valid():
-        name = "drchrono team"
-        subject = "Happy Birthday from drchrono!"
-        message = form.cleaned_data['message']
-        from_email = "drchrono@drchrono.com"
-        recipient_list = birthday_email_list
-        # datatuple for sending mass mail
-        email_tuple = ((subject, message, from_email, recipient_list),)
-        count = send_mass_mail(email_tuple, fail_silently=False)
-        confirmation = "Birthday wishes were sent to %s people." % count
-
-    template = 'user.html'
-    context = {'patient_data': p, 'form': form, 'confirmation': confirmation, 'birthdays': birthdays}
-
-    return render(request, template, context)
