@@ -104,7 +104,8 @@ def demographics(request):
         # since not using appointment id to update appt status
         # todo: my logged in doctor id is different
         a = AppointmentModel.objects.filter(patient=patient,
-                                            office=office).exclude(status='Complete').exclude(status='No Show').earliest('scheduled_time')
+                                            office=office).exclude(status='Complete').exclude(
+            status='No Show').earliest('scheduled_time')
         # .update(arrival_time=arrival_time, status=status)
         a.arrival_time = arrival_time
         a.status = status

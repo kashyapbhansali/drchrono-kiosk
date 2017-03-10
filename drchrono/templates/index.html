@@ -34,13 +34,13 @@
 {% else %}
 
     {% block navbar %}
-
+        {% include 'navbar.html' %}
     {% endblock %}
 
     <div class="container">
         {% block content %}
 
-            <h3>Patient details</h3>
+            <h3>Already Logged In!!</h3>
 
         {% endblock %}
     </div>
