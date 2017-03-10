@@ -1,5 +1,6 @@
 import datetime
 from pprint import pprint as pp
+from .models import *
 
 import requests
 
@@ -85,3 +86,15 @@ def check_get_demographics(request, checkin_data):
 
     # no match
     return None
+
+
+def post_appointment_data(request, apt_id):
+    payload = AppointmentModel.objects.filter(id=apt_id).values()[0]
+    # pp(result)
+    payload['duration'] = 5
+    payload.pop('arrival_time', None)
+    payload.pop('call_in_time', None)
+    url = 'https://drchrono.com/api/appointments'
+    r = requests.post(url, headers=request.session['headers'], data=payload)
+    print payload
+    print "============  post request to update appt:", r, "==================="

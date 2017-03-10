@@ -40,6 +40,7 @@ def office(request, office_id):
     for apt in appointments:
         a, created = AppointmentModel.objects.update_or_create(
             id=apt['id'],
+            duration=apt['duration'],
             doctor=apt['doctor'],
             patient=apt['patient'],
             office=apt['office'],
@@ -102,7 +103,8 @@ def demographics(request):
         # assuming patient has only one appointment scheduled in a day.
         # since not using appointment id to update appt status
         # todo: my logged in doctor id is different
-        a = AppointmentModel.objects.filter(patient=patient, office=office).earliest('scheduled_time')
+        a = AppointmentModel.objects.filter(patient=patient,
+                                            office=office).exclude(status='Complete').exclude(status='No Show').earliest('scheduled_time')
         # .update(arrival_time=arrival_time, status=status)
         a.arrival_time = arrival_time
         a.status = status
@@ -124,7 +126,7 @@ def doctor(request):
     appts = AppointmentModel.objects.filter(scheduled_time__day=current_day,
                                             scheduled_time__month=current_month,
                                             scheduled_time__year=current_year).order_by('scheduled_time')
-    #pp(appts)
+    # pp(appts)
 
     # logic for calculating average time
     apt_for_avg_time = appts.filter(status='Complete')
@@ -132,15 +134,16 @@ def doctor(request):
     count = 0
     sum = 0
     for a in apt_for_avg_time:
-        count = count + 1
-        time_diff = a.call_in_time - a.arrival_time
-        sum = sum + time_diff.total_seconds()
-        print sum
+        if a.call_in_time and a.arrival_time:
+            count = count + 1
+            time_diff = a.call_in_time - a.arrival_time
+            sum = sum + time_diff.total_seconds()
+            print sum
 
     if count != 0:
         avg_time = int((sum / 60) / count)
 
-    #print datetime.datetime.now()
+    # print datetime.datetime.now()
     context = {'appointments': appts, 'current_time': datetime.datetime.now(), 'avg_time': avg_time}
     return render(request, 'doctor.html', context)
 
@@ -148,7 +151,8 @@ def doctor(request):
 def mark_complete(request, apt_id):
     # set patient-id's status to completed in appointment model
     AppointmentModel.objects.filter(id=apt_id).update(status='Complete')
-    print 'apt %d , status set to In Session.'
+    # print 'apt %d , status set to In Session.'
+    # post_appointment_data(request, apt_id)
     return redirect('/doctor')
 
 
@@ -156,7 +160,8 @@ def call_in(request, apt_id):
     # set patient-id's call in time and status to In Session in appointment model
     call_in_time = datetime.datetime.now()
     AppointmentModel.objects.filter(id=apt_id).update(call_in_time=call_in_time, status='In Session')
-    print 'apt %d , status set to In Session.'
+    # print 'apt %d , status set to In Session.'
+    # post_appointment_data(request, apt_id)
     return redirect('/doctor')
 
 

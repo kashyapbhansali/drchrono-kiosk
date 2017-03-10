@@ -25,6 +25,7 @@ class PatientModel(models.Model):
 
 class AppointmentModel(models.Model):
     id = models.CharField(primary_key=True, max_length=10)
+    duration = models.IntegerField()
     doctor = models.IntegerField()
     patient = models.IntegerField()
     office = models.IntegerField()

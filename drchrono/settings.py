@@ -111,7 +111,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 # keys for Oauth
 SOCIAL_AUTH_DRCHRONO_KEY = 'CIb34CzsBiAWyKz6tME9Sg4SgWLEt469NO9DQptG'
 SOCIAL_AUTH_DRCHRONO_SECRET = 'DxxB9rcQZt8usKWxagbmhTfPT9sTUYTkZZkhOVWwBm7c6t9FzKBwWihxylAqvrNIIZdUkbX21vkWAEOWc5EDBkvOiIoFPrmvjkDtBOOmVzdSGuoectX4LTiiookirCyW'
-SOCIAL_AUTH_DRCHRONO_SCOPE = ['user:read patients:read calendar:read clinical:read']
+SOCIAL_AUTH_DRCHRONO_SCOPE = ['user:read patients:read calendar:read clinical:read calendar:write clinical:write']
 LOGIN_REDIRECT_URL = '/setup_kiosk'
 
 # setting up SMTP for emails
