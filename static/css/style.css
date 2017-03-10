@@ -37,8 +37,8 @@
 
 .office a {
     position: absolute;
-    bottom:0;
-    right:0;
+    bottom: 0;
+    right: 0;
 }
 
 .checkin {
@@ -46,7 +46,7 @@
     #border: 1px solid;
     padding: 20px;
     background-color: #f5f5f5;
-    box-shadow: 0 1px 0 rgba(0,0,0,.15);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .15);
 }
 
 .current_time {
@@ -55,4 +55,8 @@
 
 .avg_time {
     text-align: center;
+}
+
+.avg_time .time {
+    font-size: 48px;
 }

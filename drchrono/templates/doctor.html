@@ -1,6 +1,10 @@
 {% extends 'index.html' %}
 {% load app_filters %}
 
+{% block navbar %}
+    {% include 'navbar.html' %}
+{% endblock %}
+
 {% block content %}
     <div class="col-md-8">
         <h2>Today's Appointments <span class="current_time"> ({{ current_time.date }})</span></h2>
@@ -68,9 +72,13 @@
         </table>
     </div>
 
-    <div class="col-md-4 avg_time">
-        <h2>Avg. Wait Time</h2>
-        {{ avg_time }}
+    <div class="col-md-offset-1 col-md-3 avg_time jumbotron"
+         style="text-align: center; padding: 10px; background-color:#5BB75B; color: white; margin-top: 20px;">
+        <h2>Avg. Wait</h2>
+        <hr>
+        <span class="time" style="font-size: 60px">{{ avg_time }}</span>
+        <br>
+        <span class="minutes">Mins.</span>
     </div>
 
 {% endblock %}
